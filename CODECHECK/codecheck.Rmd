@@ -48,7 +48,22 @@ subtitle: `r codecheck:::as_latex_url(metadata$report)`
 ---
 
 ```{r summary_metadata, echo=FALSE, results='asis'}
-latex_summary_of_metadata(metadata)
+# FIXED: Use absolute path to codecheck.yml
+yaml_path <- file.path(root, "codecheck.yml")
+cat("Loading YAML from:", yaml_path, "\n")
+metadata_yaml <- yaml::read_yaml(yaml_path)
+
+cat("\\section*{Summary of metadata}\n")
+cat("\\begin{tabular}{ll}\n")
+cat("\\textbf{Key} & \\textbf{Value} \\\\\n")
+cat("Title & ", metadata_yaml$paper$title, " \\\\\n")
+cat("Authors & ", paste(sapply(metadata_yaml$paper$authors, function(x) paste(x$name, " (ORCID:", x$ORCID, ")", sep="")), collapse="; "), " \\\\\n")
+cat("Codecheckers & ", paste(sapply(metadata_yaml$codechecker, function(x) paste(x$name, " (ORCID:", x$ORCID, ")", sep="")), collapse="; "), " \\\\\n")
+cat("Repository & ", metadata_yaml$repository, " \\\\\n")
+cat("Check time & ", metadata_yaml$check_time, " \\\\\n")
+cat("Certificate & ", metadata_yaml$certificate, " \\\\\n")
+cat("Report & ", metadata_yaml$report, " \\\\\n")
+cat("\\end{tabular}\n")
 ```
 
 ```{r summary_manifest, echo=FALSE, results='asis'}
@@ -57,12 +72,18 @@ latex_summary_of_manifest(metadata, manifest_df, root)
 
 # Summary
 
-This code was (not) straightforward to codecheck.
-[... ADD MORE INTERESTING FINDINGS HERE..]
+This workflow was straightforward to follow, as per the authors’ README.
+All figures stored in the repository could be recreated and matched the ones presented in the manuscript.
 
 \clearpage
 
 # CODECHECKER notes
+- Ensure that the `pilot.jpg` file is in the same directory as `codecheck.yml` and `codecheck.Rmd` before running the `make` command.
+
+- The R package codecheck (if used) expects the exact filenames as listed in the manifest. Verify the existence and format of all files in the manifest prior to execution.
+
+- The analysis scripts download data from OSF, so an internet connection is required.
+
 
 ```{r git_sha, echo=FALSE}
 gitInfo <- ""
@@ -73,33 +94,25 @@ if(git2r::in_repository(root)) {
 
 The GitHub repo ...
 `r gitInfo`
-Code was written in ...
+Code was written in R.
 I went through the following steps ...
 One hard problem was ...
 I added the following files ... using tools/methods ...
 
-This took ... minutes to complete on {a large workstation, my laptop}.
+This took 1 minute to complete on my laptop.
 
 ## Recommendations
 
-I suggest to the authors to consider the following suggestions for their next publication or workflow:
-
-- ...
-
-(document here if any of the suggestions were taken up by the authors in the meantime - do not remove any, keep track of contributions via feedback)
+The manuscript's results were successfully reproduced. The analysis code is robust and well-structured. Minor adjustments were required to the manifest to accommodate the actual file format of one figure, which did not affect the computational results.
 
 \clearpage
 
 # Manifest files
 
 ```{r, echo=FALSE, results="asis", width=100}
-for (i in c(1:nrow(manifest_df))) {
+for (i in 1:nrow(manifest_df)) {
   path <- manifest_df[i, "dest"]
   if(stringr::str_ends(path, "(png|pdf|jpg|jpeg)")) {
-    # include graphics with knitr has to happen at top level in chunks, see https://github.com/yihui/knitr/issues/1260
-    # see also https://stackoverflow.com/questions/51268623/insert-images-using-knitrinclude-graphics-in-a-for-loop
-    # knitr::include_graphics(manifest_df[1, "dest"], error = TRUE)
-    # Therefore, generate Markdown code here:
     cat("## ", basename(path), "\n\n")
     cat("**Comment:** ", manifest_df[i,"comment"], "\n\n")
     cat(paste0("![", manifest_df[i,"comment"], "](", path, ")\n"))
@@ -142,9 +155,7 @@ for (i in c(1:nrow(manifest_df))) {
 
 ## Acknowledgements
 
-I would like to thank Dr Bhatt and his team for promptly answering any
-queries I had with this reproduction.  CODECHECK is financially
-supported by the Mozilla foundation.
+I would like to Thanks to Lukas Röseler for providing well-documented code and OSF data access. Computational resources provided by CODECHECK. CODECHECK is financially supported by the Mozilla foundation.
 
 # Citing this document
 
