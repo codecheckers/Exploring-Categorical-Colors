@@ -47,10 +47,9 @@ title: `r paste("CODECHECK certificate", metadata$certificate)`
 subtitle: `r codecheck:::as_latex_url(metadata$report)`
 ---
 
-```{r summary_metadata, echo=FALSE, results='asis'}
+```{r summary_metadata, echo=FALSE, results='asis', warning=FALSE}
 # FIXED: Use absolute path to codecheck.yml
 yaml_path <- file.path(root, "codecheck.yml")
-cat("Loading YAML from:", yaml_path, "\n")
 metadata_yaml <- yaml::read_yaml(yaml_path)
 
 cat("\\section*{Summary of metadata}\n")
@@ -58,6 +57,7 @@ cat("\\begin{tabular}{ll}\n")
 cat("\\textbf{Key} & \\textbf{Value} \\\\\n")
 cat("Title & ", metadata_yaml$paper$title, " \\\\\n")
 cat("Authors & ", paste(sapply(metadata_yaml$paper$authors, function(x) paste(x$name, " (ORCID:", x$ORCID, ")", sep="")), collapse="; "), " \\\\\n")
+cat("Reference & ", metadata_yaml$paper$reference, " \\\\\n")
 cat("Codecheckers & ", paste(sapply(metadata_yaml$codechecker, function(x) paste(x$name, " (ORCID:", x$ORCID, ")", sep="")), collapse="; "), " \\\\\n")
 cat("Repository & ", metadata_yaml$repository, " \\\\\n")
 cat("Check time & ", metadata_yaml$check_time, " \\\\\n")
@@ -75,8 +75,6 @@ latex_summary_of_manifest(metadata, manifest_df, root)
 This workflow was straightforward to follow, as per the authors’ README.
 All figures stored in the repository could be recreated and matched the ones presented in the manuscript.
 
-\clearpage
-
 # CODECHECKER notes
 - Ensure that the `pilot.jpg` file is in the same directory as `codecheck.yml` and `codecheck.Rmd` before running the `make` command.
 
@@ -92,20 +90,23 @@ if(git2r::in_repository(root)) {
 }
 ```
 
-The GitHub repo ...
+The GitHub repo is at `r metadata_yaml$repository`,
 `r gitInfo`
 Code was written in R.
-I went through the following steps ...
-One hard problem was ...
-I added the following files ... using tools/methods ...
+I went through the following steps:
 
-This took 1 minute to complete on my laptop.
+- Installed required packages: ggplot2, reshape, dplyr, psych
+
+- Executed ministudy1_analyses_final.R and ministudy2_analyses_final.R which downloaded data from OSF
+
+- Generated all figures in working directory
+
+This took 2 minute to complete on my laptop.
 
 ## Recommendations
 
-The manuscript's results were successfully reproduced. The analysis code is robust and well-structured. Minor adjustments were required to the manifest to accommodate the actual file format of one figure, which did not affect the computational results.
+The manuscript's results were successfully reproduced. The analysis code is robust and well-structured. Minor adjustments were required to the manifest to accommodate the actual file format of one figure, which did not affect the computational results which did not affect the computational results.
 
-\clearpage
 
 # Manifest files
 
@@ -151,11 +152,10 @@ for (i in 1:nrow(manifest_df)) {
 }
 ```
 
-\clearpage
 
 ## Acknowledgements
 
-I would like to Thanks to Lukas Röseler for providing well-documented code and OSF data access. Computational resources provided by CODECHECK. CODECHECK is financially supported by the Mozilla foundation.
+I would like to thank Lukas Röseler for providing well-documented code and OSF data access. Computational resources provided by CODECHECK. CODECHECK is financially supported by the Mozilla foundation.
 
 # Citing this document
 

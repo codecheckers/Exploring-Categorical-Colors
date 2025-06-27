@@ -21,6 +21,7 @@ manifest:
     
 paper:
   title: "Exploring Categorical Colors"
+  reference: "https://doi.org/10.31234/osf.io/gj76p"
   authors:
     - name: Lukas Röseler
       ORCID: 0000-0002-6446-1901
@@ -35,4 +36,4 @@ summary: >
 repository: https://github.com/codecheckers/Exploring-Categorical-Colors.git
 check_time: "2020-04-13 10:00:00"
 certificate: 2025-018
-report: https://doi.org/10.5281/zenodo.FIXME
+report: https://doi.org/10.5281/zenodo.15755369
