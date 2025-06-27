@@ -1,1 +1,0 @@
-This folder contains results (reproduced figures and other assests) of the CODECHECK performed on this publication.
