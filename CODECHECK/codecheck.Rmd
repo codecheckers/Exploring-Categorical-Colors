@@ -48,22 +48,7 @@ subtitle: `r codecheck:::as_latex_url(metadata$report)`
 ---
 
 ```{r summary_metadata, echo=FALSE, results='asis', warning=FALSE}
-# FIXED: Use absolute path to codecheck.yml
-yaml_path <- file.path(root, "codecheck.yml")
-metadata_yaml <- yaml::read_yaml(yaml_path)
-
-cat("\\section*{Summary of metadata}\n")
-cat("\\begin{tabular}{ll}\n")
-cat("\\textbf{Key} & \\textbf{Value} \\\\\n")
-cat("Title & ", metadata_yaml$paper$title, " \\\\\n")
-cat("Authors & ", paste(sapply(metadata_yaml$paper$authors, function(x) paste(x$name, " (ORCID:", x$ORCID, ")", sep="")), collapse="; "), " \\\\\n")
-cat("Reference & ", metadata_yaml$paper$reference, " \\\\\n")
-cat("Codecheckers & ", paste(sapply(metadata_yaml$codechecker, function(x) paste(x$name, " (ORCID:", x$ORCID, ")", sep="")), collapse="; "), " \\\\\n")
-cat("Repository & ", metadata_yaml$repository, " \\\\\n")
-cat("Check time & ", metadata_yaml$check_time, " \\\\\n")
-cat("Certificate & ", metadata_yaml$certificate, " \\\\\n")
-cat("Report & ", metadata_yaml$report, " \\\\\n")
-cat("\\end{tabular}\n")
+latex_summary_of_metadata(metadata)
 ```
 
 ```{r summary_manifest, echo=FALSE, results='asis'}
@@ -111,12 +96,16 @@ The manuscript's results were successfully reproduced. The analysis code is robu
 # Manifest files
 
 ```{r, echo=FALSE, results="asis", width=100}
-for (i in 1:nrow(manifest_df)) {
-  path <- manifest_df[i, "dest"]
+for(i in c(1:nrow(manifest_df))) {
+  path <- manifest_df[i,"dest"]
   if(stringr::str_ends(path, "(png|pdf|jpg|jpeg)")) {
+    # include graphics with knitr has to happen at top level in chunks, see https://github.com/yihui/knitr/issues/1260
+    # see also https://stackoverflow.com/questions/51268623/insert-images-using-knitrinclude-graphics-in-a-for-loop
+    # knitr::include_graphics(manifest_df[1, "dest"], error = TRUE)
+    # Therefore, generate Markdown code here:
     cat("## ", basename(path), "\n\n")
     cat("**Comment:** ", manifest_df[i,"comment"], "\n\n")
-    cat(paste0("![", manifest_df[i,"comment"], "](", path, ")\n"))
+    cat(paste0("![", "Test ", "](", path, ")\n"))
   } else if (stringr::str_ends(path, "(Rout|txt)")) {
     cat("## ", basename(path), "\n\n")
     cat("\\scriptsize \n\n", "```txt\n")

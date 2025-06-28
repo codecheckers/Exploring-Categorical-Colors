@@ -34,6 +34,6 @@ summary: >
   The workflow outlined in the authors’ README was easily comprehensible.
   All figures stored in the repository could be recreated in R, and they accurately matched those presented in the manuscript.
 repository: https://github.com/codecheckers/Exploring-Categorical-Colors.git
-check_time: "2020-04-13 10:00:00"
-certificate: 2025-018
-report: https://doi.org/10.5281/zenodo.15755369
+check_time: "2025-06-28 12:28:00"
+certificate: 2025-020
+report: https://doi.org/10.5281/zenodo.15762107
