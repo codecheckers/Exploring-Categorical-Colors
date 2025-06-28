@@ -75,7 +75,7 @@ if(git2r::in_repository(root)) {
 }
 ```
 
-The GitHub repo is at `r metadata_yaml$repository`,
+The GitHub repo is at `r metadata$repository`,
 `r gitInfo`
 Code was written in R.
 I went through the following steps:
